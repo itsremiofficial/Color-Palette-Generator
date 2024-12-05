@@ -30,8 +30,15 @@ export const ColorPickerComponent: React.FC<ColorPickerProps> = ({
         onClick={onToggle}
       />
       {isVisible && (
-        <div className="absolute z-10 mt-2" style={{ top: "48px", left: "0" }}>
-          <ReactColorPicker color={colorState} onChange={handleChange} />
+        <div
+          className="absolute z-10 mt-2 w-72 custom-picker"
+          style={{ top: "48px", left: "0" }}
+        >
+          <ReactColorPicker
+            color={colorState}
+            onChange={handleChange}
+            hideInput={["hex", "hsv"]}
+          />
         </div>
       )}
     </div>
