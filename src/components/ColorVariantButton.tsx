@@ -20,7 +20,7 @@ export const ColorVariantButton: React.FC<ColorVariantButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className="flex items-center py-2 pl-3 pr-12 bg-slate-100 hover:bg-slate-200 transition-colors duration-500 rounded-xl w-full relative text-secondary group"
+      className="flex items-center py-3 pl-3 pr-12 bg-slate-100 hover:bg-slate-200 transition-colors duration-500 rounded-xl w-full relative text-secondary group"
     >
       <ColorDot color={variant.hex} />
       <div className="flex flex-col items-start">

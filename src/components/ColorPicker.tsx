@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { ColorPicker as ReactColorPicker, useColor } from "react-color-palette";
 
@@ -24,7 +25,7 @@ export const ColorPickerComponent: React.FC<ColorPickerProps> = ({
   return (
     <div className="relative">
       <div
-        className="w-10 h-10 rounded-full cursor-pointer border-2 border-slate-300 hover:border-slate-400 transition-colors"
+        className="size-14 rounded-full cursor-pointer border-2 border-slate-200 hover:border-slate-300 transition-colors"
         style={{ backgroundColor: color }}
         onClick={onToggle}
       />

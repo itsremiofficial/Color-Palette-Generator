@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useCallback } from "react";
 import { ColorPickerComponent } from "./ColorPicker";
 import { ColorVariantButton } from "./ColorVariantButton";
@@ -13,6 +14,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
 }) => {
   const [baseColor, setBaseColor] = useState<string>(initBaseColor);
   const [colorName, setColorName] = useState<string>(initColorName);
+  const [variableName, setVariableName] = useState<string>("color");
   const [copiedColors, setCopiedColors] = useState<Set<string>>(new Set());
   const [isPickerVisible, setPickerVisible] = useState<boolean>(false);
   const [colorFormat, setColorFormat] = useState<ColorFormat>("hex");
@@ -66,95 +68,107 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
   }, []);
 
   return (
-    <div className="bg-white w-max flex flex-col items-center p-5 rounded-3xl ">
-      <div className="py-4 flex gap-4 w-full flex-col">
-        <label className="space-y-4 flex flex-col justify-center w-full">
-          <div className="flex gap-2 items-center justify-center relative">
-            <ColorPickerComponent
-              color={baseColor}
-              onChange={handleColorChange}
-              isVisible={isPickerVisible}
-              onToggle={() => setPickerVisible(!isPickerVisible)}
+    <div className="bg-white w-max flex p-5 gap-4 rounded-3xl ">
+      <div>
+        <div className="py-4 flex gap-4 w-full flex-col">
+          <label className="space-y-4 flex flex-col justify-center w-full">
+            <div className="flex gap-2 items-center justify-center relative">
+              <ColorPickerComponent
+                color={baseColor}
+                onChange={handleColorChange}
+                isVisible={isPickerVisible}
+                onToggle={() => setPickerVisible(!isPickerVisible)}
+              />
+              <input
+                type="text"
+                placeholder="Enter a hex color code"
+                // value={baseColor}
+                onChange={(e) => setBaseColor(e.target.value)}
+                className="bg-slate-100 shrink text-secondary rounded-xl py-3 px-2 border border-slate-300 w-max"
+              />
+              <input
+                type="text"
+                placeholder="Enter Variable Name"
+                // value={colorName}
+                onChange={(e) => setColorName(e.target.value)}
+                className="bg-slate-100 grow text-secondary rounded-xl py-3 px-2 border border-slate-300 w-max"
+              />
+            </div>
+          </label>
+          <ColorFormatSelector
+            selectedFormat={colorFormat}
+            onChange={setColorFormat}
+          />
+        </div>
+
+        <ul className="w-full mb-2">
+          <label htmlFor="Given Color" className="pb-2">
+            Given Color
+          </label>
+          <li key="9">
+            <ColorVariantButton
+              variant={colorVariants[8]}
+              isCopied={copiedColors.has(colorVariants[8].value)}
+              onClick={() => handleSingleCopy(colorVariants[8])}
+              displayValue={getColorValue(colorVariants[8])}
             />
-            <input
-              type="text"
-              placeholder="Enter a hex color code"
-              value={baseColor}
-              onChange={(e) => setBaseColor(e.target.value)}
-              className="bg-slate-100 shrink text-secondary rounded-xl py-3 px-2 border border-slate-300 w-max"
-            />
-            <input
-              type="text"
-              placeholder="Enter a hex color code"
-              value={colorName}
-              onChange={(e) => setColorName(e.target.value)}
-              className="bg-slate-100 grow text-secondary rounded-xl py-3 px-2 border border-slate-300 w-max"
-            />
-          </div>
+          </li>
+        </ul>
+
+        <label htmlFor="Color Variants" className="pb-2 w-full">
+          Color Variants
         </label>
-        <ColorFormatSelector
-          selectedFormat={colorFormat}
-          onChange={setColorFormat}
+        <div className="flex gap-4 w-full">
+          <ul className="w-full space-y-2">
+            {colorVariants.slice(0, 7).map((variant, index) => (
+              <li key={index}>
+                <ColorVariantButton
+                  variant={variant}
+                  isCopied={copiedColors.has(variant.value)}
+                  onClick={() => handleSingleCopy(variant)}
+                  displayValue={getColorValue(variant)}
+                />
+              </li>
+            ))}
+          </ul>
+
+          <ul className="w-full space-y-2">
+            {colorVariants.slice(8, 15).map((variant, index) => (
+              <li key={index + 10}>
+                <ColorVariantButton
+                  variant={variant}
+                  isCopied={copiedColors.has(variant.value)}
+                  onClick={() => handleSingleCopy(variant)}
+                  displayValue={getColorValue(variant)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <button
+          onClick={handleCopyAll}
+          className="flex justify-center items-center gap-4 w-full mt-4 py-4 px-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+        >
+          Copy All <IconCopy className="size-6" />
+        </button>
+      </div>
+      <div className="h-full py-4">
+        <input
+          type="text"
+          placeholder="Change Variable Name"
+          // value={variableName}
+          onChange={(e) => setVariableName(e.target.value)}
+          className="bg-slate-100 grow text-secondary rounded-xl py-3 px-2 border border-slate-300 w-full mb-4"
+        />
+        <ColorCodeBlock
+          variants={colorVariants}
+          colorFormat={colorFormat}
+          colorName={colorName}
+          className={`min-w-max`}
+          variableName={variableName}
         />
       </div>
-
-      <ul className="w-full mb-2">
-        <label htmlFor="Given Color" className="pb-2">
-          Given Color
-        </label>
-        <li key="9">
-          <ColorVariantButton
-            variant={colorVariants[8]}
-            isCopied={copiedColors.has(colorVariants[8].value)}
-            onClick={() => handleSingleCopy(colorVariants[8])}
-            displayValue={getColorValue(colorVariants[8])}
-          />
-        </li>
-      </ul>
-
-      <label htmlFor="Color Variants" className="pb-2 w-full">
-        Color Variants
-      </label>
-      <div className="flex gap-4 w-full">
-        <ul className="w-full space-y-2">
-          {colorVariants.slice(0, 7).map((variant, index) => (
-            <li key={index}>
-              <ColorVariantButton
-                variant={variant}
-                isCopied={copiedColors.has(variant.value)}
-                onClick={() => handleSingleCopy(variant)}
-                displayValue={getColorValue(variant)}
-              />
-            </li>
-          ))}
-        </ul>
-
-        <ul className="w-full space-y-2">
-          {colorVariants.slice(8, 15).map((variant, index) => (
-            <li key={index + 10}>
-              <ColorVariantButton
-                variant={variant}
-                isCopied={copiedColors.has(variant.value)}
-                onClick={() => handleSingleCopy(variant)}
-                displayValue={getColorValue(variant)}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <button
-        onClick={handleCopyAll}
-        className="flex justify-center items-center gap-4 w-full mt-4 py-3 px-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
-      >
-        Copy All <IconCopy className="size-6" />
-      </button>
-
-      <ColorCodeBlock
-        variants={colorVariants}
-        colorFormat={colorFormat}
-        colorName={colorName}
-      />
     </div>
   );
 };
