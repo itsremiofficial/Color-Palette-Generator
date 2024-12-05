@@ -68,7 +68,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
   }, []);
 
   return (
-    <div className="bg-white w-max flex p-5 gap-4 rounded-3xl ">
+    <div className="bg-white w-max flex p-5 gap-4 rounded-3xl md:flex-wrap md:justify-center">
       <div>
         <div className="py-4 flex gap-4 w-full flex-col">
           <label className="space-y-4 flex flex-col justify-center w-full">
