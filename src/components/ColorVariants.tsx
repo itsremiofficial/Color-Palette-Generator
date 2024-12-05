@@ -68,8 +68,8 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
   }, []);
 
   return (
-    <div className="bg-white w-max flex p-5 gap-4 rounded-3xl md:flex-wrap md:justify-center">
-      <div>
+    <div className="bg-white w-fit flex p-5 gap-4 rounded-3xl flex-wrap lg:flex-nowrap lg:justify-center">
+      <div className="w-full">
         <div className="py-4 flex gap-4 w-full flex-col">
           <label className="space-y-4 flex flex-col justify-center w-full">
             <div className="flex gap-2 items-center justify-center relative">
@@ -153,7 +153,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
           Copy All <IconCopy className="size-6" />
         </button>
       </div>
-      <div className="h-full py-4">
+      <div className="w-full h-full py-4">
         <input
           type="text"
           placeholder="Change Variable Name"
@@ -165,7 +165,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
           variants={colorVariants}
           colorFormat={colorFormat}
           colorName={colorName}
-          className={`min-w-max`}
+          className={`lg:min-w-max lg:w-full`}
           variableName={variableName}
         />
       </div>

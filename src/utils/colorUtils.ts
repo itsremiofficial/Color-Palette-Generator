@@ -105,8 +105,8 @@ export const adjustOklch = (
   // Scale values
   const scaledL = newL * 100;
 
-  if (scaledL >= 99.9) return `oklch(100% 0 0)`; // Pure white
-  if (scaledL <= 0.1) return `oklch(0% 0 0)`; // Pure black
+  if (scaledL >= 99.9) return `oklch(100% 0 0)`;
+  if (scaledL <= 0.1) return `oklch(0% 0 0)`;
 
   return `oklch(${scaledL.toFixed(1)}% ${newC.toFixed(2)} ${H.toFixed(0)})`;
 };
