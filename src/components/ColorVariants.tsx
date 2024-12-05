@@ -32,8 +32,10 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
       const variants: ColorVariant[] = [];
 
       // Generate lighter variants
-      for (let i = 10; i >= 1; i--) {
-        const percentage = i / 10;
+      const lightVariantSteps = [100, 150, 200, 250, 300, 350, 400, 450, 500];
+      lightVariantSteps.forEach((step, index) => {
+        const percentage =
+          (lightVariantSteps.length - index) / lightVariantSteps.length;
         const [adjustedR, adjustedG, adjustedB] = adjustRGB(
           r,
           g,
@@ -44,25 +46,26 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
         const hexValue = rgbToHex(adjustedR, adjustedG, adjustedB);
         variants.push({
           value: hexValue,
-          label: `--${colorName}-${500 - i * 50}`,
+          label: `--${colorName}-${step}`,
           hex: hexValue,
           rgb: rgbToString(adjustedR, adjustedG, adjustedB),
           oklch: adjustOklch(color, "light", percentage),
         });
-      }
+      });
 
-      // Add base color
+      // Add base color variant without number
       variants.push({
         value: color,
-        label: `--${colorName}-500`,
+        label: `--${colorName}`,
         hex: color,
         rgb: rgbToString(r, g, b),
         oklch: hexToOklch(color),
       });
 
       // Generate darker variants
-      for (let i = 1; i <= 10; i++) {
-        const percentage = i / 10;
+      const darkVariantSteps = [600, 650, 700, 750, 800, 850, 900, 950, 1000];
+      darkVariantSteps.forEach((step, index) => {
+        const percentage = (index + 1) / darkVariantSteps.length;
         const [adjustedR, adjustedG, adjustedB] = adjustRGB(
           r,
           g,
@@ -73,12 +76,12 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
         const hexValue = rgbToHex(adjustedR, adjustedG, adjustedB);
         variants.push({
           value: hexValue,
-          label: `--${colorName}-${500 + i * 50}`,
+          label: `--${colorName}-${step}`,
           hex: hexValue,
           rgb: rgbToString(adjustedR, adjustedG, adjustedB),
           oklch: adjustOklch(color, "dark", percentage),
         });
-      }
+      });
 
       return variants;
     },
@@ -129,7 +132,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
     setTimeout(() => setCopiedColors(new Set()), 3000);
   }, [colorVariants, getColorValue]);
 
-  const handleColorChange = useCallback((color: any) => {
+  const handleColorChange = useCallback((color: { hex: string }) => {
     setBaseColor(color.hex);
   }, []);
 
@@ -166,9 +169,26 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
         />
       </div>
 
+      <ul className="w-full mb-2">
+        <label htmlFor="Given Color" className="pb-2">
+          Given Color
+        </label>
+        <li key="9">
+          <ColorVariantButton
+            variant={colorVariants[8]}
+            isCopied={copiedColors.has(colorVariants[8].value)}
+            onClick={() => handleSingleCopy(colorVariants[8])}
+            displayValue={getColorValue(colorVariants[8])}
+          />
+        </li>
+      </ul>
+
+      <label htmlFor="Color Variants" className="pb-2 w-full">
+        Color Variants
+      </label>
       <div className="flex gap-4 w-full">
         <ul className="w-full space-y-2">
-          {colorVariants.slice(0, 10).map((variant, index) => (
+          {colorVariants.slice(0, 9).map((variant, index) => (
             <li key={index}>
               <ColorVariantButton
                 variant={variant}
@@ -181,7 +201,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
         </ul>
 
         <ul className="w-full space-y-2">
-          {colorVariants.slice(10, 20).map((variant, index) => (
+          {colorVariants.slice(10, 19).map((variant, index) => (
             <li key={index + 10}>
               <ColorVariantButton
                 variant={variant}
