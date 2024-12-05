@@ -59,11 +59,11 @@ export const hexToOklch = (hex: string): string => {
   let H = (Math.atan2(b_, a) * 180) / Math.PI;
   if (H < 0) H += 360;
 
-  // Scale values
+  // Scale values with appropriate chroma
   const scaledL = L * 100;
-  const scaledC = C * 0.4;
+  const scaledC = C * 0.8; // Increased chroma scaling for better color matching
 
-  return `oklch(${scaledL.toFixed(1)}% ${scaledC.toFixed(3)} ${H.toFixed(1)})`;
+  return `oklch(${scaledL.toFixed(1)}% ${scaledC.toFixed(2)} ${H.toFixed(0)})`;
 };
 
 export const adjustOklch = (
@@ -84,23 +84,31 @@ export const adjustOklch = (
   let H = (Math.atan2(b_, a) * 180) / Math.PI;
   if (H < 0) H += 360;
 
-  // Adjust lightness based on target
-  let newL = L;
+  let newL: number;
+  let newC: number;
+  const baseC = C * 0.8; // Match the base chroma scaling
+
   if (target === "light") {
-    // Increase lightness towards 1
+    // Adjust lightness and chroma for lighter shades
     newL = L + (1 - L) * percentage;
+    // Progressive chroma adjustment for lighter shades
+    const chromaScale = Math.pow(1 - percentage, 0.5); // Slower chroma reduction
+    newC = baseC * chromaScale;
   } else {
-    // Decrease lightness towards 0
+    // Adjust lightness and chroma for darker shades
     newL = L * (1 - percentage);
+    // Maintain stronger chroma in darker shades
+    const chromaScale = Math.pow(1 - percentage, 0.3); // Slower chroma reduction for darks
+    newC = baseC * chromaScale;
   }
 
   // Scale values
   const scaledL = newL * 100;
-  const scaledC = C * 0.4;
 
-  return `oklch(${scaledL.toFixed(1)}% ${scaledC.toFixed(3)} ${H.toFixed(
-    1
-  )})`;
+  if (scaledL >= 99.9) return `oklch(100% 0 0)`; // Pure white
+  if (scaledL <= 0.1) return `oklch(0% 0 0)`; // Pure black
+
+  return `oklch(${scaledL.toFixed(1)}% ${newC.toFixed(2)} ${H.toFixed(0)})`;
 };
 
 export const adjustRGB = (

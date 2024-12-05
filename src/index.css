@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.mockup-code {
+  position: relative;
+  overflow: hidden;
+  overflow-x: auto;
+  min-width: 18rem;
+  border-radius: 1rem;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  @apply bg-slate-100 text-slate-900;
+}
+.mockup-code pre[data-prefix]:before {
+  content: attr(data-prefix);
+  display: inline-block;
+  text-align: right;
+  width: 2rem;
+  opacity: 0.5;
+  @apply text-slate-900;
+}
+
+.mockup-code:before {
+  content: "";
+  margin-bottom: 1rem;
+  display: block;
+  height: 0.75rem;
+  width: 0.75rem;
+  border-radius: 9999px;
+  opacity: 1;
+  --shadow-900: #7e858f;
+  box-shadow: 1.4em 0 var(--shadow-900), 2.8em 0 var(--shadow-900),
+    4.2em 0 var(--shadow-900);
+}
+.mockup-code pre {
+  padding-right: 1.25rem;
+  line-height: 2;
+}
+.mockup-code pre:before {
+  content: "";
+  margin-right: 2ch;
+}

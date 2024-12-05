@@ -3,15 +3,9 @@ import { ColorPickerComponent } from "./ColorPicker";
 import { ColorVariantButton } from "./ColorVariantButton";
 import { ColorFormatSelector } from "./ColorFormatSelector";
 import { ColorVariant, ColorVariantsProps, ColorFormat } from "../types/color";
-import {
-  hexToRgb,
-  rgbToHex,
-  rgbToString,
-  hexToOklch,
-  adjustRGB,
-  adjustOklch,
-} from "../utils/colorUtils";
 import IconCopy from "./IconCopy";
+import { ColorCodeBlock } from "./ColorCodeBlock";
+import { generateColorVariants } from "../utils/colorVarientsGenerator";
 
 const ColorVariants: React.FC<ColorVariantsProps> = ({
   baseColor: initBaseColor,
@@ -23,72 +17,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
   const [isPickerVisible, setPickerVisible] = useState<boolean>(false);
   const [colorFormat, setColorFormat] = useState<ColorFormat>("hex");
 
-  const generateColorVariants = useCallback(
-    (color: string): ColorVariant[] => {
-      const rgb = hexToRgb(color);
-      if (!rgb) return [];
-      const [r, g, b] = rgb;
-
-      const variants: ColorVariant[] = [];
-
-      // Generate lighter variants
-      const lightVariantSteps = [100, 150, 200, 250, 300, 350, 400, 450, 500];
-      lightVariantSteps.forEach((step, index) => {
-        const percentage =
-          (lightVariantSteps.length - index) / lightVariantSteps.length;
-        const [adjustedR, adjustedG, adjustedB] = adjustRGB(
-          r,
-          g,
-          b,
-          "light",
-          percentage
-        );
-        const hexValue = rgbToHex(adjustedR, adjustedG, adjustedB);
-        variants.push({
-          value: hexValue,
-          label: `--${colorName}-${step}`,
-          hex: hexValue,
-          rgb: rgbToString(adjustedR, adjustedG, adjustedB),
-          oklch: adjustOklch(color, "light", percentage),
-        });
-      });
-
-      // Add base color variant without number
-      variants.push({
-        value: color,
-        label: `--${colorName}`,
-        hex: color,
-        rgb: rgbToString(r, g, b),
-        oklch: hexToOklch(color),
-      });
-
-      // Generate darker variants
-      const darkVariantSteps = [600, 650, 700, 750, 800, 850, 900, 950, 1000];
-      darkVariantSteps.forEach((step, index) => {
-        const percentage = (index + 1) / darkVariantSteps.length;
-        const [adjustedR, adjustedG, adjustedB] = adjustRGB(
-          r,
-          g,
-          b,
-          "dark",
-          percentage
-        );
-        const hexValue = rgbToHex(adjustedR, adjustedG, adjustedB);
-        variants.push({
-          value: hexValue,
-          label: `--${colorName}-${step}`,
-          hex: hexValue,
-          rgb: rgbToString(adjustedR, adjustedG, adjustedB),
-          oklch: adjustOklch(color, "dark", percentage),
-        });
-      });
-
-      return variants;
-    },
-    [colorName]
-  );
-
-  const colorVariants = generateColorVariants(baseColor);
+  const colorVariants = generateColorVariants(baseColor, colorName);
 
   const getColorValue = useCallback(
     (variant: ColorVariant) => {
@@ -188,7 +117,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
       </label>
       <div className="flex gap-4 w-full">
         <ul className="w-full space-y-2">
-          {colorVariants.slice(0, 9).map((variant, index) => (
+          {colorVariants.slice(0, 7).map((variant, index) => (
             <li key={index}>
               <ColorVariantButton
                 variant={variant}
@@ -201,7 +130,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
         </ul>
 
         <ul className="w-full space-y-2">
-          {colorVariants.slice(10, 19).map((variant, index) => (
+          {colorVariants.slice(8, 15).map((variant, index) => (
             <li key={index + 10}>
               <ColorVariantButton
                 variant={variant}
@@ -220,6 +149,12 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
       >
         Copy All <IconCopy className="size-6" />
       </button>
+
+      <ColorCodeBlock
+        variants={colorVariants}
+        colorFormat={colorFormat}
+        colorName={colorName}
+      />
     </div>
   );
 };
