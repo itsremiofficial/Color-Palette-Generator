@@ -81,14 +81,14 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
               />
               <input
                 type="text"
-                placeholder="Enter a hex color code"
+                placeholder="Colors hex code"
                 // value={baseColor}
                 onChange={(e) => setBaseColor(e.target.value)}
                 className="bg-slate-100 shrink text-secondary rounded-xl py-3 px-2 border border-slate-300 w-max"
               />
               <input
                 type="text"
-                placeholder="Enter Variable Name"
+                placeholder="Color Name eg: red or yellow"
                 // value={colorName}
                 onChange={(e) => setColorName(e.target.value)}
                 className="bg-slate-100 grow text-secondary rounded-xl py-3 px-2 border border-slate-300 w-max"
@@ -156,7 +156,7 @@ const ColorVariants: React.FC<ColorVariantsProps> = ({
       <div className="w-full h-full py-4">
         <input
           type="text"
-          placeholder="Change Variable Name"
+          placeholder="Change Variable Name eg: color or primary"
           // value={variableName}
           onChange={(e) => setVariableName(e.target.value)}
           className="bg-slate-100 grow text-secondary rounded-xl py-3 px-2 border border-slate-300 w-full mb-4"
